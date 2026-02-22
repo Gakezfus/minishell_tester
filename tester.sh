@@ -4,9 +4,12 @@
 run_test()
 {
 local input="$1"
+local name="$2"
 local fail=0
 
-echo "$input"
+echo "$name"
+
+echo
 
 bash < "$input" > bash.out 2> bash.err
 local bash_status=$?
@@ -37,5 +40,5 @@ echo
 }
 
 for test in tests/*/*; do
-    run_test "$test"
+    run_test "$test" "${test##*/}"
 done
