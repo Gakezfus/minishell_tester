@@ -6,12 +6,12 @@ run_test()
 local input="$1"
 local fail=0
 
-printf "Input: %s\n" "$input"
+echo "$input"
 
 bash < "$input" > bash.out 2> bash.err
 local bash_status=$?
 
-./minishell < "$input" > mini.out 2> mini.err
+../minishell < "$input" > mini.out 2> mini.err
 local mini_status=$?
 
 diff -u bash.out mini.out || {
@@ -35,3 +35,7 @@ fi
 
 echo
 }
+
+for test in tests/*/*; do
+    run_test "$test"
+done
