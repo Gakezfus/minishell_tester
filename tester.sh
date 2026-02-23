@@ -1,6 +1,8 @@
 
 #!bin/bash
 
+failure=0
+
 run_test()
 {
 local input="$1"
@@ -9,7 +11,7 @@ local fail=0
 
 echo "$name"
 
-echo
+echo "------------------------------------------------------------"
 
 bash < "$input" > bash.out 2> bash.err
 local bash_status=$?
@@ -20,25 +22,34 @@ local mini_status=$?
 diff -u bash.out mini.out || {
 	echo "STDOUT mismatch"
 	fail=1
+	failure=1
 }
 
 diff -u bash.err mini.err || {
 	echo "STDERR mismatch"
 	fail=1
+	failure=1
 }
 
 if [[ $bash_status -ne $mini_status ]]; then
         echo "EXIT mismatch: expected $bash_status got $mini_status"
 		fail=1
+		failure=1
 fi
 
 if [[ $fail -eq 0 ]]; then
 		echo "OK"
 fi
 
+echo "------------------------------------------------------------"
+
 echo
 }
+
+make -C ../
 
 for test in tests/*/*; do
     run_test "$test" "${test##*/}"
 done
+
+exit $failure
